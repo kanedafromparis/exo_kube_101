@@ -1,0 +1,141 @@
+apiVersion: v1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    generation: 1
+    labels:
+      run: cheers
+    name: cheers
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        run: cheers
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          run: cheers
+      spec:
+        containers:
+        - env:
+          - name: EXO_8
+            valueFrom:
+              configMapKeyRef:
+                name: sample-config
+                key: sample-env-file.json
+          - name: SAMPLE_LITERAL
+            valueFrom:
+              configMapKeyRef:
+                name: sample-config
+                key: sample
+          - name: MY_NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+           # Kubernetes 1.7+
+          - name: MY_NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: MY_POD_SERVICE_ACCOUNT
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.serviceAccountName
+          # Kubernetes 1.8+
+          - name: MY_POD_UID
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.uid
+          - name: MY_CPU_REQUEST
+            valueFrom:
+              resourceFieldRef:
+                containerName: cheers
+                resource: requests.cpu
+          - name: MY_CPU_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: cheers
+                resource: limits.cpu
+          - name: MY_MEM_REQUEST
+            valueFrom:
+              resourceFieldRef:
+                containerName: cheers
+                resource: requests.memory
+          - name: MY_MEM_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: cheers
+                resource: limits.memory
+          image: kanedafromparis/cheers:0.0.2
+          imagePullPolicy: IfNotPresent
+          name: cheers
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+- apiVersion: v1
+  data:
+    sample: "Grass looks green"
+    sample-env-file.json: "{\"EXO_8\":\"1\",\n\"LANG\"=\"FR\",\n\"CURRENCY\"=\"BRL\",\n\"FORMAT=#_###.##\"}"
+    sample-env-file.properties: |
+      EXO_8: 1
+      LANG:FR
+      CURRENCY=BRL
+      FORMAT=#_###.##
+  kind: ConfigMap
+  metadata:
+    name: sample-config
+    labels:
+      run: cheers
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      run: cheers
+    name: cheers
+  spec:
+    externalTrafficPolicy: Cluster
+    ports:
+    - nodePort: 30477
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      run: cheers
+    sessionAffinity: None
+    type: NodePort

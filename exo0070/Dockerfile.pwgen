@@ -1,0 +1,20 @@
+
+#TARGET_REPO=kaneda-k && docker build --rm -t $TARGET_REPO/pwgen:0.1 . -f Dockerfile.pwgen
+#TARGET_REPO=kaneda-k && docker run -d -p 8080:8080 $TARGET_REPO/pwgen:0.1
+#TARGET_REPO=kaneda-k && docker run -u 1000:0 -d -p :8080 $TARGET_REPO/pwgen:0.1
+#
+#
+#docker history $TARGET_REPO/httpd
+
+FROM alpine:3.7
+
+LABEL Maintainer="Kanedafriends <kf@kaneda-k.net>" \
+        Description="This is a tool mykubernetes introduction" \
+        Version="0.1"\
+        Name=pwgen
+
+RUN apk add --update pwgen curl && \
+    rm -rf /var/cache/apk/* /tmp/* /var/tmp/* 
+    
+USER nobody
+ENTRYPOINT ["pwgen"]

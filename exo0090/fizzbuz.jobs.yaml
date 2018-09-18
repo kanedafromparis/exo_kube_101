@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    run: fizzbuz
+  name: fizzbuz
+spec:
+  backoffLimit: 3
+  completions: 1
+  parallelism: 1
+  #  selector:
+  #    matchLabels:
+  #      controller-uid: 
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        job-name: fizzbuz
+        run: fizzbuz
+    spec:
+      containers:
+      - command: ["/bin/bash"]
+        args: ["/opt/fizzbuz/fizzbuz.sh"]
+        env:
+        - name: FB_SIZE
+          value: '100000'
+        image: 'mysql:5.6'
+        #image: kanedafromparis/pwgen:0.1
+        imagePullPolicy: IfNotPresent
+        name: fizzbuz
+        resources: {}
+        stdin: true
+        stdinOnce: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/fizzbuz
+          name: fizzbuz
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: OnFailure
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          name: fizzbuz
+        name: fizzbuz

@@ -1,0 +1,174 @@
+
+---
+apiVersion: v1
+data:
+  index.html: |-
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>This is a file from configmap</title>
+    </head>
+    <body style="background-color:Tomato;">
+
+    <h1>This is a file from configmap</h1>
+
+    </body>
+    </html>
+kind: ConfigMap
+metadata:
+  name: sample-index-html
+  labels:
+    run: nginx
+---
+apiVersion: v1
+data:
+  nginx.vh.default.ssl.conf: "server {\n    listen       8080 ssl;\n    server_name
+    \ localhost;\n\n    add_header X-kaneda-header this-is-a-great-header;\n    \n
+    \   ssl_certificate /etc/nginx/ssl/domain/tls.crt;\n    ssl_certificate_key /etc/nginx/ssl/domain/tls.key;\n
+    \   ssl_dhparam /etc/nginx/dh/dh.pem;\n    ssl_protocols       TLSv1.2;\n    ssl_ciphers
+    \        EECDH+AESGCM:EECDH+AES;\n    ssl_prefer_server_ciphers on;\n    \n    #charset
+    koi8-r;\n    #access_log  /var/log/nginx/host.access.log  main;\n\n    location
+    / {\n        root   /var/www/localhost/htdocs/;\n        index  index.html index.htm
+    index.php;\n    }\n\n    #error_page  404              /404.html;\n\n    # redirect
+    server error pages to the static page /50x.html\n    #\n    error_page   500 502
+    503 504  /50x.html;\n    location = /50x.html {\n        root   /usr/share/nginx/html;\n
+    \   }\n\n    # proxy the PHP scripts to Apache listening on 127.0.0.1:80\n    #\n
+    \   location ~ \\.php$ {\n        proxy_pass   http://127.0.0.1;\n    }\n\n    #
+    pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000\n    #\n    #location
+    ~ \\.php$ {\n    #    root           html;\n    #    fastcgi_pass   127.0.0.1:9000;\n
+    \   #    fastcgi_index  index.php;\n    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;\n
+    \   #    include        fastcgi_params;\n    #}\n\n    # deny access to .htaccess
+    files, if Apache's document root\n    # concurs with nginx's one\n    #\n    location
+    ~ /\\.ht {\n        deny  all;\n    }\n}"
+kind: ConfigMap
+metadata:
+  name: nginx-v-ssl-conf
+  labels:
+    run: nginx
+---
+apiVersion: v1
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVaVENDQTAyZ0F3SUJBZ0lKQUpWdGNCa1NHaS9hTUEwR0NTcUdTSWIzRFFFQkJRVUFNSDR4Q3pBSkJnTlYKQkFZVEFrWlNNUTh3RFFZRFZRUUlFd1pHY21GdVkyVXhEakFNQmdOVkJBY1RCVkJCVWtsVE1SRXdEd1lEVlFRSwpFd2hMWVc1bFpHRXRhekViTUJrR0ExVUVBeE1TYzJGdGNHeGxMbVY0WVcxd2JHVXVZMjl0TVI0d0hBWUpLb1pJCmh2Y05BUWtCRmc5emIzSnllVUJuYldGcGJDNWpiMjB3SGhjTk1UZ3dNekV6TVRZek56RTNXaGNOTVRnd016SXoKTVRZek56RTNXakIrTVFzd0NRWURWUVFHRXdKR1VqRVBNQTBHQTFVRUNCTUdSbkpoYm1ObE1RNHdEQVlEVlFRSApFd1ZRUVZKSlV6RVJNQThHQTFVRUNoTUlTMkZ1WldSaExXc3hHekFaQmdOVkJBTVRFbk5oYlhCc1pTNWxlR0Z0CmNHeGxMbU52YlRFZU1Cd0dDU3FHU0liM0RRRUpBUllQYzI5eWNubEFaMjFoYVd3dVkyOXRNSUlCSWpBTkJna3EKaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUEyemJoenJ4emJTNXFkT2hmMTRCRzk0dUNldWhlTzJ3MwpDcVJFQ2Y5S1h2VHBZVjNoZ05rcG9KK0hLS3BTZ2MvV0hrN2lGQURvZ01UZmIvYWlGekZXdWhwcmhDQWZmWUlTClhBUGU5Qjk4UnhvbU1qaTdDSjdaR0pZSUVaRmJEZ0FZdWlFRmRZQnE3WmVBUFh0Y001UHlDeVVHK2JMb05oOWYKRE80dm9mSWtxVStWdFFkQmRSdHBsZHFyNHVlaXFDUGVxT0VySHBPVU5vZ1phNzBWMDhKTFBucVRBdjN6UndPSQp0eUY1cmRPbGkwaysvajdWbEFTcG1zNnhVdDQ2M2R3dlBMT0hRNzluK1dLWi9iVjQ4ZGRGTnByTDBzMGVxUlRsCnlaSE5jdTc1OS9vVmNIR01Hd2RrOXJ2SlRUaXI4aGJPNURnbnlSQmUxUUpIOTd0NlVWcWRTUUlEQVFBQm80SGwKTUlIaU1CMEdBMVVkRGdRV0JCUXQ1UFRPUy9CZHdpQnJhZUc5MUdyK2gza3RDVENCc2dZRFZSMGpCSUdxTUlHbgpnQlF0NVBUT1MvQmR3aUJyYWVHOTFHcitoM2t0Q2FHQmc2U0JnREIrTVFzd0NRWURWUVFHRXdKR1VqRVBNQTBHCkExVUVDQk1HUm5KaGJtTmxNUTR3REFZRFZRUUhFd1ZRUVZKSlV6RVJNQThHQTFVRUNoTUlTMkZ1WldSaExXc3gKR3pBWkJnTlZCQU1URW5OaGJYQnNaUzVsZUdGdGNHeGxMbU52YlRFZU1Cd0dDU3FHU0liM0RRRUpBUllQYzI5eQpjbmxBWjIxaGFXd3VZMjl0Z2drQWxXMXdHUklhTDlvd0RBWURWUjBUQkFVd0F3RUIvekFOQmdrcWhraUc5dzBCCkFRVUZBQU9DQVFFQXBMNmtmdUFmMU9vUTBjZVZyMEpEZXdBbmxQVDF1aWVmQ2RrSUY1SnZDZnY1dldRZWJhUVcKbHlpU2JEeEF2TDFJaWNMdUQweE1KOVd0ZVJSSVNIOWt2RmJIQ0VEb3B6SEw0OGVlNWNSTmZ5YW9Uc3ZrUytiSgpjblczSm1rbXV6U2RjS00zUGxwRmdId1pxOENhNDdQUSt4K1hFV3ZwcFErR280Zm9CcmI4NExhWlJ2U1gwV0Z6CmxXR0tTMkhRM1piS3R6VlZkdW5Gc2JQZXV5YXdoaEdiUDVBOXVncGIva3hlWTlmS3dXMEtYOVpQMVNGQ0NDOEMKR2RaR1owZkxsbjJaMUpWSXBybFBhK05ZWlhvVkI0cUFENU1TbUdHaWc0SWFDTFEvTVo4TVZlNGgrWnQ2U3lkeAplclhuWEJHb2IzdzdGVVpJVk94OExGZ09nVXpYOEViVCtnPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb2dJQkFBS0NBUUVBMnpiaHpyeHpiUzVxZE9oZjE0Qkc5NHVDZXVoZU8ydzNDcVJFQ2Y5S1h2VHBZVjNoCmdOa3BvSitIS0twU2djL1dIazdpRkFEb2dNVGZiL2FpRnpGV3VocHJoQ0FmZllJU1hBUGU5Qjk4UnhvbU1qaTcKQ0o3WkdKWUlFWkZiRGdBWXVpRUZkWUJxN1plQVBYdGNNNVB5Q3lVRytiTG9OaDlmRE80dm9mSWtxVStWdFFkQgpkUnRwbGRxcjR1ZWlxQ1BlcU9FckhwT1VOb2daYTcwVjA4SkxQbnFUQXYzelJ3T0l0eUY1cmRPbGkwaysvajdWCmxBU3BtczZ4VXQ0NjNkd3ZQTE9IUTc5bitXS1ovYlY0OGRkRk5wckwwczBlcVJUbHlaSE5jdTc1OS9vVmNIR00KR3dkazlydkpUVGlyOGhiTzVEZ255UkJlMVFKSDk3dDZVVnFkU1FJREFRQUJBb0lCQUNJK3VwdlBPTUR2cFZYSwpEMTdjL1RraXBDbUxMMTFkRkdRbk1USFduY21qdk9tbS90bGdFMjZ5UFMwUEhvQ0U5VkFheHBxVllienNCSE83Ck5hc2wzQVNLcUEwbDc0VnQwbXhwZG1Ud25qdUZURDVBT29lb09RWHNPaXAwYUtNUlJNdWU2UGxvTEV3ZGhMMFcKRGx0SVcyRitVVTZrc2ozeVBLa0tkSXA2QjF3amRuazl4a294WTVBYVNwemhJYW42Q2hLdjNLeGtYY3BzdDhadApHWE9IcFpDbDBOYjRIT2ZTRlh4c2FKUkZJVjB5cUwyMS9RRWUxazBaTHhYbEJlUkFmcFYxMEl1d2U2SmViRGo1CmpBZTExTXErYm8xVlFwMHJISWxBUkw2aEdORDJUdlU5OTJmZmlvOUw3Y01xL3c4dnI2aDhuNlFhM1RRNmlKaVgKVVovb3J0a0NnWUVBL0JQWjUzKzJpaDBDdWg4bmRiS21rdmlEQXRIL0Z4YitYY0hsdnJSSWJBbktGSG5yZWc0cgp5QlFDdFpEVldwSmpWTDhFczYrRVRoK1ZoMkRiZHAwUWtuSmZZMmxzZ00vYS84YWg0R3hQZ1lwWG1xODFKcmVsCjZlSGdUUTFzTUZpQTJ1NklhRzl3L3Nsalg3Y0FGNHNUemxMeW5Cb2tsa1l3aEpqdnhMejVIUGNDZ1lFQTNxQWUKNlFtT1ZrN1d4cm9hN2dUWmovdnZKdGV1WTZZQVpyZmZQclBUM0xLdDlPT1E1cjYrZzlBSUZpbU5sSHA1QzVnZwpUemxGbkQ3ZjE0Q1dBQzdWQ3h6dlVmbG5lVkhKUUJ6VHdoa3BvaWJuNUVlbnhkOWpDZit0alFiTDNhQVlkaTRyCjFnOGlIWmVOeStEcXFLYmJCZmJWbnQ1cTdQQUxnUHF0cGVWV3g3OENnWUJKK2dWcjQ5WU5LRUJob0x6eTFJLy8KOThCeTltL1hOZDlHWXAzcTNudVdnVFQxMTJYY3R3WHdQTGNpMDdOWlZqYWlhMENVL3dCajhPN3dBT1BISm9iegpnMjhzL0laa014dkJEbWo1TkxBTWd5Mzhia2k1NlJGZTF2UDlpTi9rUEVUc2V5NDYvK0Y0VkYrK2VqVWpzNlFIClc5NXBJMTd6WHZ2a0hnSFhpZUhOdHdLQmdEWlNEWmpCQ3lrR0RhUHB6eDVhc3BkT1dyazRrVVdoUUtIUHBicFAKK0piMlJqbmx1UHFFZWtvQlhhZkN0ZGdQMWk4OURFMG9aVkxOaUtLMXJtUVhDVWF2NWJrenlNcXlhUStxdVFTNApUUTlTdk94WGk1bGRlM1g2RytlNFM5QWsrek1DNnhGTkdmN3NkdDNUWUk2TVFBOEJmbmhJUHdEWFJZZFFJMFRDClk5MVRBb0dBVkhoS3VGVmp1clRoc0lJakJFVUhQc1JOYVpiQms3YmdtRGVsVHJvalBMWEdaRFdlM1hIRG9SNTQKbFJlem9HSmRoVUpBVzBXdTFKMzE3dGFBT3lZYXZLZEwvdXZ0akFXQlBucWxxeXFZZXNWaHo5UXdES014THR2QgpoVEcxdjBkbTBIdkNpTGZVQVJSTWU0dXd4NURnYjZHMjJzbXVLczE1R08raGxreDRmOUU9Ci0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+kind: Secret
+metadata:
+  name: nginx-selfsigned
+  labels:
+    run: nginx
+type: kubernetes.io/tls
+---
+apiVersion: v1
+data:
+  dh.pem: LS0tLS1CRUdJTiBESCBQQVJBTUVURVJTLS0tLS0KTUlJQkNBS0NBUUVBZ3lvMFNtT2lJaEkwcWYzaWxic05MSkFyRDUyRnh6ZVRYbGt2YUVKanY5NmRiNWdBaVh4NApOZlVPUEpZNmd3S3REcFB1VS9MWlJncDE0UjUybjI1SWtnaXQ1cDVKM29XOEJrRjhRV01qeUwrcVBSYldDcVZGClBxNVdqYmJIcDZpV2tNUFJmMU9ZR29oUmJZZDIwekQ2c0tpMEpuNThjZExTZWo5dmRqSG1MK2ptanFGa1NZd0oKc1gzNXFLMTdjenUrODhBcWVuRjNtOEJUKzB0SXNzR01jWFdUcnNKOTlDQ05qcDRVNVZWUFQ4cWdiT3lmUlk1ZApKRGQ3NU1sSDJaeWo0V0EwT3kxUlh4U0d6VkllVkdwREdGa0FKeGpWckYvZUNRNS9PMkZUKy9aaVA1NE92THdoCm1vVU9QbXlvYWpzNFdZRmVFdC92Z2EyWGZHOVowNmRqZXdJQkFnPT0KLS0tLS1FTkQgREggUEFSQU1FVEVSUy0tLS0tCg==
+kind: Secret
+metadata:
+  name: nginx-v-dhparam
+  labels:
+    run: nginx
+type: Opaque
+
+--- 
+apiVersion: v1
+type: Opaque
+kind: Secret
+data:
+  dh.pem: LS0tLS1CRUdJTiBESCBQQVJBTUVURVJTLS0tLS0KTUlJQkNBS0NBUUVBZ3lvMFNtT2lJaEkwcWYzaWxic05MSkFyRDUyRnh6ZVRYbGt2YUVKanY5NmRiNWdBaVh4NApOZlVPUEpZNmd3S3REcFB1VS9MWlJncDE0UjUybjI1SWtnaXQ1cDVKM29XOEJrRjhRV01qeUwrcVBSYldDcVZGClBxNVdqYmJIcDZpV2tNUFJmMU9ZR29oUmJZZDIwekQ2c0tpMEpuNThjZExTZWo5dmRqSG1MK2ptanFGa1NZd0oKc1gzNXFLMTdjenUrODhBcWVuRjNtOEJUKzB0SXNzR01jWFdUcnNKOTlDQ05qcDRVNVZWUFQ4cWdiT3lmUlk1ZApKRGQ3NU1sSDJaeWo0V0EwT3kxUlh4U0d6VkllVkdwREdGa0FKeGpWckYvZUNRNS9PMkZUKy9aaVA1NE92THdoCm1vVU9QbXlvYWpzNFdZRmVFdC92Z2EyWGZHOVowNmRqZXdJQkFnPT0KLS0tLS1FTkQgREggUEFSQU1FVEVSUy0tLS0tCg==
+metadata:
+  name: nginx-v-dhparam
+  labels:
+    run: nginx
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  generation: 1
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: kanedafromparis/nginx:0.3
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: nginx-v-conf
+          readOnly: true
+        - mountPath: /var/www/localhost/htdocs
+          name: sample-index-html
+          readOnly: true
+        - mountPath: /etc/nginx/ssl/domain
+          name: nginx-selfsigned
+          readOnly: true
+        - mountPath: /etc/nginx/dh
+          name: nginx-v-dhparam
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 365
+          name: nginx-v-ssl-conf
+        name: nginx-v-conf
+      - configMap:
+          defaultMode: 365
+          name: sample-index-html
+        name: sample-index-html
+      - name: nginx-v-dhparam
+        secret:
+          defaultMode: 420
+          secretName: nginx-v-dhparam
+      - name: nginx-selfsigned
+        secret:
+          defaultMode: 420
+          secretName: nginx-selfsigned
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 31269
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: nginx
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

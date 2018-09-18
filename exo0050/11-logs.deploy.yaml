@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kubernetes.io/change-cause: "2.0"
+  labels:
+    run: logs
+  name: logs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: logs
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: logs
+    spec:
+      containers:
+      - image: kanedafromparis/logversion:2.0
+        imagePullPolicy: IfNotPresent
+        name: logs
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 5

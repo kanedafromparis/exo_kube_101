@@ -1,0 +1,54 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    run: mysql-feed
+  name: mysql-feed
+spec:
+  schedule: "*/1 * * * *"
+  #  selector:
+  #    matchLabels:
+  #      controller-uid: 
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - 
+            args:
+            - /bin/sh
+            - -c
+            - RANDOM_SENTENCE=$(cat /dev/urandom | tr -dc 'A-Z' | fold -w 14 | head -n 1) && mysql -h mysql.rsm-001.svc.cluster.local -P 3306 -u Ou9Pae0aethe -pPe2ohKapaeli exo009 --execute="INSERT INTO cron (SENTENCE,REG_DATE) VALUES (\"$RANDOM_SENTENCE\",NOW());"
+            env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: rootpw
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: password
+            - name: MYSQL_DATABASE
+              value: exo009
+            image: 'mysql:5.6'
+            imagePullPolicy: IfNotPresent
+            name: mysql-feed
+            resources: {}
+            stdin: true
+            stdinOnce: false
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: OnFailure
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 5
+      

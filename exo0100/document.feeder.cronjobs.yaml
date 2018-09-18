@@ -1,0 +1,47 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    run: nginx-feed
+    kaneda-k.net/exo: exo0100
+  name: nginx-feed
+spec:
+  schedule: "*/1 * * * *"
+  #  selector:
+  #    matchLabels:
+  #      controller-uid: 
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - 
+            args:
+            - /bin/sh
+            - -c
+            - cat /dev/urandom | tr -dc 'A-Z' | fold -w 14 | head -n 1 >> /temp/index.html
+            env:
+
+            image: 'kanedafromparis/nginx:0.3'
+            volumeMounts:
+            - mountPath: /temp
+              name: pv0001
+              readOnly: false
+            imagePullPolicy: IfNotPresent
+            name: nginx-feed
+            resources: {}
+            stdin: true
+            stdinOnce: false
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: OnFailure
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 5
+          volumes:
+          - name: pv0001
+            persistentVolumeClaim:
+              claimName: pv0001-claim
+      

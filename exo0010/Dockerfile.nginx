@@ -1,0 +1,38 @@
+
+#TARGET_REPO=kaneda-k && docker build --rm -t $TARGET_REPO/nginx:ocp-0.1 . -f Dockerfile.nginx
+#TARGET_REPO=kaneda-k && docker run -u 1048:0 -d -p 8080:8080 $TARGET_REPO/nginx:ocp-0.1
+#TARGET_REPO=kaneda-k && docker run -d -p 80 $TARGET_REPO/nginx:ocp-0.1
+#
+#
+#TARGET_REPO=kaneda-k &&  docker run -u 1056:0 -m 256M --cpu-quota=5000 -d -p 8080 $TARGET_REPO/nginx:ocp-0.1; DK_HOSTIP=`minikube ip` && DK_HOSTPORT=`docker inspect $(docker ps -n 1 -q) | jq -r '.[0].NetworkSettings.Ports."8080/tcp"[0].HostPort'` && curl -i http://$DK_HOSTIP:$DK_HOSTPORT
+#
+#docker history $TARGET_REPO/httpd
+
+FROM alpine:3.7
+
+LABEL Maintainer="Kanedafriends <kf@kaneda-k.net>" \
+        Description="This is a tool image for helping debugging kubernetes" \
+        Version="0.1" \
+        Name="ocp-nginx"
+        
+     
+RUN apk --update add nginx
+
+EXPOSE 8080
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+
+COPY run-nginx.sh /run-nginx.sh
+COPY 0.1/ /var/www/localhost/htdocs/
+
+RUN mkdir -p /var/tmp/nginx && \
+      chown -R 1001:0 /var/log/nginx /var/run /etc/nginx/* /var/lib/nginx/ /var/tmp/* && \
+      chmod -R g+rwX /var/log/nginx /var/run /etc/nginx/* /var/lib/nginx/ /var/tmp/* && \
+      ln -sf /dev/stdout /var/log/nginx/access.log && \
+      ln -sf /dev/stderr /var/log/nginx/error.log && \
+      chmod -v ug+x /run-nginx.sh
+
+USER 1001
+
+CMD ["/run-nginx.sh"]

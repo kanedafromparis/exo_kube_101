@@ -1,0 +1,102 @@
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-credentials
+  labels:
+    run: mysql
+    kaneda-k.net/exo: exo0090
+type: Opaque
+#echo -n $(pwgen 12 -1) | base64
+data:
+  rootpw: b292ZW1pZmkwc29Z
+  user: T3U5UGFlMGFldGhl
+  password: UGUyb2hLYXBhZWxp
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database
+  labels:
+    run: mysql
+    kaneda-k.net/exo: exo0090
+  annotations:
+    volume.alpha.kubernetes.io/storage-class: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    run: mysql
+    kaneda-k.net/exo: exo0090
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+        kaneda-k.net/exo: exo0090
+    spec:
+      containers:
+      - image: 'mysql:5.6'
+        name: mysql
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: rootpw
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: user
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: password
+          - name: MYSQL_DATABASE
+            value: exo009
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: database
+      volumes:
+      - name: database
+        persistentVolumeClaim:
+          claimName: database
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    run: mysql
+    kaneda-k.net/exo: exo0090
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: mysql

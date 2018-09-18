@@ -1,0 +1,35 @@
+
+#TARGET_REPO=kaneda-k && docker build --rm -t $TARGET_REPO/fortune:ocp-0.1 . -f Dockerfile.fortune
+#TARGET_REPO=kaneda-k && docker run -u 1048:0 -d -p 8080:8080 $TARGET_REPO/fortune:ocp-0.1
+#TARGET_REPO=kaneda-k && docker run -d -p 80 $TARGET_REPO/nginx:ocp-0.1
+#
+#
+#TARGET_REPO=kaneda-k &&  docker run -u 1056:0 -m 256M --cpu-quota=5000 -d -p 8080 $TARGET_REPO/nginx:ocp-0.1; DK_HOSTIP=`minikube ip` && DK_HOSTPORT=`docker inspect $(docker ps -n 1 -q) | jq -r '.[0].NetworkSettings.Ports."8080/tcp"[0].HostPort'` && curl -i http://$DK_HOSTIP:$DK_HOSTPORT
+#
+#docker history $TARGET_REPO/httpd
+
+FROM alpine:3.7
+
+LABEL Maintainer="Kanedafriends <kf@kaneda-k.net>" \
+        Description="This just a message of the day applycation for exercicew " \
+        Version="0.1" \
+        Name="fortune"
+        
+     
+RUN apk --update add fortune
+
+EXPOSE 8080
+
+
+COPY run-fortune.sh /run-fortune.sh
+COPY run-tail.sh /run-tail.sh
+
+RUN mkdir -p /opt/exchange && \
+      touch /opt/exchange/fortune
+      chown -R 1001:0 /opt/exchange && \
+      chmod -v ug+x /run-tail.sh
+      chmod -v ug+x /run-fortune.sh 
+
+USER 1001
+
+CMD ["/run-nginx.sh"]
