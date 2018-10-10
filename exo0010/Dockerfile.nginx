@@ -8,7 +8,7 @@
 #
 #docker history $TARGET_REPO/httpd
 
-FROM alpine:3.7
+FROM alpine:3.8
 
 LABEL Maintainer="Kanedafriends <kf@kaneda-k.net>" \
         Description="This is a tool image for helping debugging kubernetes" \
@@ -31,6 +31,7 @@ RUN mkdir -p /var/tmp/nginx && \
       chmod -R g+rwX /var/log/nginx /var/run /etc/nginx/* /var/lib/nginx/ /var/tmp/* && \
       ln -sf /dev/stdout /var/log/nginx/access.log && \
       ln -sf /dev/stderr /var/log/nginx/error.log && \
+      ln -sf /dev/stdout /var/log/nginx/host.access.log && \
       chmod -v ug+x /run-nginx.sh
 
 USER 1001
