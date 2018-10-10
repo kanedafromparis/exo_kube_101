@@ -1,8 +1,13 @@
 
-À partir du fichier config-sample.json listant les projets et des fichiers projets, faire un script bash pour
-Afficher la liste des identifiants utilisateurs, 
-Afficher le nombre de développeurs des projets, à partir du fichier listant les projet et des fichiers projets
-trouver le projet le plus récents
+# À partir du fichier config-sample.json listant les projets et ses membres , faire une commande bash (en one-liner) pour
+
+## 1 - Afficher la liste des projets 
+
+## 2 - Afficher la liste des identifiants utilisateurs des membres 
+
+## 3 - Afficher les identifiants utilisateurs des développeurs des projets
+
+## 4 - Afficher le projet le plus récents
 
 
 
