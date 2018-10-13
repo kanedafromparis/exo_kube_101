@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: fortune
+  name: fortune
+spec:
+  containers:
+  - env:
+    - name: VERBOSE
+      value: '0'
+# Ajouter l'URL de votre image 
+    image: kanedafromparis/fortune:ocp-0.1
+    imagePullPolicy: IfNotPresent
+    name: fortune
+    volumeMounts:
+    - mountPath: /opt/exchange
+      name: exchange
+  - env:
+    - name: VERBOSE
+      value: '1'
+    args:
+    - /run-tail.sh
+    image: kanedafromparis/fortune:ocp-0.1
+    imagePullPolicy: IfNotPresent
+    name: tail
+    volumeMounts:
+    - mountPath: /opt/exchange
+      name: exchange
+  terminationGracePeriodSeconds: 1
+  volumes:
+  - name: exchange
+    emptyDir: {}
