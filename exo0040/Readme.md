@@ -20,8 +20,6 @@
 
 ### 2.2 - Modifier ce service pour l'exposer en NodePort
 
-Faire un fichier de définition d’un service exposant ce pod a travers un nodeport
-
 ### 2.3 - verifier (optionnel : faire une commande curl de validation)
 
 ### 2.4 - supprimer ce service et le recrée exposé en NodePort en une seul commande
