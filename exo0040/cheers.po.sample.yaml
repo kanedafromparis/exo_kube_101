@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: cheers
+  name: cheers
+spec:
+  containers:
+  #Ajouter l'URL de L'image
+  - image: 
+    imagePullPolicy: IfNotPresent
+    name: cheers
+    ports:
+  #Ajouter le port exposé de l'inatance docker
+    - containerPort: 
+      protocol: TCP

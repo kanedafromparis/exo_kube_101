@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: cheers
+  name: cheers
+spec:
+  containers:
+  - env:
+    - name: EXO_4
+      value: '1'
+    image: kanedafromparis/cheers:0.0.2
+    imagePullPolicy: IfNotPresent
+    name: cheers
+    ports:
+    - containerPort: 8080
+      protocol: TCP
