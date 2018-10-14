@@ -1,34 +1,45 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kubernetes.io/change-cause: "increase replicats and maxSurge"
+    kubernetes.io/change-cause: "version 3.1"
   labels:
-    run: logs
-  name: logs
+    run: logsversion
+  name: logsversion
 spec:
+## definir le nombre de replicas
   replicas: 6
+#####
   selector:
     matchLabels:
-      run: logs
+      run: logsversion
   strategy:
     rollingUpdate:
+## definir le nombre de pods de transition
       maxSurge: 3
+#####
       maxUnavailable: 1
     type: RollingUpdate
   template:
     metadata:
       creationTimestamp: null
       labels:
-        run: logs
+        run: logsversion
     spec:
       containers:
-      - image: kanedafromparis/logversion:2.0
+      - image: kanedafromparis/logversion:3.1
         imagePullPolicy: IfNotPresent
-        name: logs
+        name: logsversion
         ports:
         - containerPort: 8080
           protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi 
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
