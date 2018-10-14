@@ -16,10 +16,11 @@ spec:
     volumeMounts:
     - mountPath: /opt/exchange
       name: exchange
-# Le deuxieme conenteur 
+# Le deuxieme container 
   - env:
     - name: VERBOSE
       value: '1'
+# La commande de surcharge du container
     args:
     - /run-tail.sh
     image: kanedafromparis/fortune:ocp-0.1
