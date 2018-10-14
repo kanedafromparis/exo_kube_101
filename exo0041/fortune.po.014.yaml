@@ -16,6 +16,7 @@ spec:
     volumeMounts:
     - mountPath: /opt/exchange
       name: exchange
+# Le deuxieme conenteur 
   - env:
     - name: VERBOSE
       value: '1'
@@ -28,6 +29,7 @@ spec:
     - mountPath: /opt/exchange
       name: exchange
   terminationGracePeriodSeconds: 1
+# Le volume 'exchange' defini dans le POD
   volumes:
   - name: exchange
     emptyDir: {}

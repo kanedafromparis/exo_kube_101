@@ -13,10 +13,12 @@ spec:
     image: kanedafromparis/fortune:ocp-0.1
     imagePullPolicy: IfNotPresent
     name: fortune
+# Le volume 'exchange' monté dans le container 
     volumeMounts:
     - mountPath: /opt/exchange
       name: exchange
   terminationGracePeriodSeconds: 1
+# Le volume 'exchange' defini dans le POD
   volumes:
   - name: exchange
     emptyDir: {}
