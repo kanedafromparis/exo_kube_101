@@ -39,3 +39,6 @@ NB : On peut toujours parcourire le json avec `cat projets.json | jq . | less`
   On affiche projet de date "2017-12-05" avec 
   
    $ `cat projets.json | jq '[.[]? | select(.startdate | contains("2017-12-05"))] | .[]?.projectName'`
+
+  Avec un one liner :
+   $ `cat projets.json | jq '[.[]? | select(.startdate | contains('$(cat projets.json | jq '.[]?.startdate' | sort | tail -n 1)'))] | .[]?.projectName'`
