@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    run: pwgen
+  name: pwgen
+spec:
+  backoffLimit: 3
+  completions: 1
+  parallelism: 1
+  activeDeadlineSeconds: 10
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        job-name: pwgen
+        run: pwgen
+    spec:
+      containers:
+      - command: ["/bin/sh"]
+        args: ["-c", "echo hello; sleep 2;exit 1"]
+        image: kanedafromparis/pwgen:0.1
+        imagePullPolicy: IfNotPresent
+        name: pwgen
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 5

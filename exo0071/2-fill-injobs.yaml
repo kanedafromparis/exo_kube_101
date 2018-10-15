@@ -8,6 +8,7 @@ spec:
   backoffLimit: 6
   completions: 20
   parallelism: 5
+  activeDeadlineSeconds: 300
   #  selector:
   #    matchLabels:
   #      controller-uid: 

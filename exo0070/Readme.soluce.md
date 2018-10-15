@@ -1,37 +1,43 @@
-lancer un job de création de password (kanedafromparis/pwgen:0.1)
+# JOBS
 
- $ kubectl run -i pwgen  --image=kanedafromparis/pwgen:0.1 --restart=OnFailure -- -y 22 20
+## 1 - A partir du fichier [pwgen.jobs.sample.000.yaml](pwgen.jobs.sample.000.yaml)
 
- - modifier ce job pour qu’il ne fonctionne pas correctement
- - valider le comportement de backoff
- 
- $ kubectl apply -f 1-pwgen.jobs.yaml
- 
- $ watch -n 2 kubectl get po -l run=pwgen
- 
- $ kubectl describe jobs pwgen
- 
- 
-lancer l’application cheers (kanedafromparis/cheers:0.0x)
- - faire 20 jobs (avec 5 en parallèle) qui remplissent l’application de valeur aléatoire)
+### 1.1 - Faire un job qui lance la commande pwgen et affiche 22 mots de passe de 15 carateres contenant au moins un caracter speciale
 
-  $ kubectl run cheers --image=kanedafromparis/cheers:0.0.2 --replicas=1 --port=8080 --limits='cpu=100m,memory=256Mi' \
-     && kubectl expose deploy cheers --type=NodePort \
-     && PORT_NODE=$(kubectl get svc -l run=cheers -o json | jq -r .items[]?.spec.ports[]?.nodePort) \
-     && IP_NODE=$(minikube ip)
- 
-  $ kubectl apply -f 2-fill-injobs.yaml
- 
-  $ watch -n 2 kubectl get po
+
+   On obtient un fichier comme [pwgen.jobs.011.yaml](pwgen.jobs.011.yaml)
+
+   $ `kubectl apply -f pwgen.jobs.011.yaml`
+
+   On peut consluter les logs avec  
+   
+   $ `kubectl logs $(kubectl get po -l run=pwgen -o name)`
      
-     
-     
-     
-curl "http://$IP_NODE:$PORT_NODE/api/1.0/cheers" \
-    -H 'Accept-Encoding: gzip, deflate' \
-    -H 'Accept-Language: en-US,en;q=0.9' \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Accept: application/json, text/plain, */*' \
-    -H 'X-Requested-With: XMLHttpRequest' \
-    -H 'Connection: keep-alive' \
-    --data-binary '{"intro":"I am a big fan","cause":"You R the best"}' --compressed
+### 1.2 - Modifier le fichier obtenu pour que l'image docker retourne une erreur "exit 1"
+
+   On obtient un fichier comme [pwgen.jobs.012.yaml](pwgen.jobs.012.yaml)
+
+   $ `kubectl apply -f pwgen.jobs.012.yaml`
+   
+   Remarque : 
+   pensez a supprimer le job precedent avec :  
+   
+   $ `kubectl delete -f pwgen.jobs.012.yaml && kubectl apply -f pwgen.jobs.012.yaml`
+
+### 1.3 - Modifier le fichier obtenu pour ce job ne fasse que 3 essaies, on peur repartir de [pwgen.jobs.sample.012.yaml](pwgen.jobs.sample.012.yaml)
+
+   On obtient un fichier comme [pwgen.jobs.013.yaml](pwgen.jobs.013.yaml)
+
+   $ `kubectl apply -f pwgen.jobs.013.yaml`
+   
+   Remarque : 
+   Pensez a consulter le describe 
+   
+   $ `kubectl describe jobs pwgen`
+   
+   
+   pensez a supprimer le job precedent avec :  
+   
+   
+   $ `kubectl delete -f pwgen.jobs.013.yaml && kubectl apply -f pwgen.jobs.013.yaml`
+   Remarque : https://github.com/kubernetes/kubernetes/issues/62382#issuecomment-384327386
