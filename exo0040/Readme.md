@@ -8,7 +8,7 @@
 
 ### 1.2 - En Navigant dans l'application, afficher les informations d'environement avec votre navigateur
 
-### 1.3 - modifier le fichier pour ajouter une variable d'environnement EXO_4 à "1" et appliquer vos modifications
+### 1.3 - modifier le fichier pour ajouter une variable d'environnement EXO_4 à "1" et appliquer vos modifications. Vous pouves utiliser "kubectl explain Pod"
 
 ### 1.4 - verifier et la commande curl de validation
 
