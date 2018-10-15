@@ -62,6 +62,8 @@
    Dans un deuxieme terminal on fait un curl dont on filtre le resultat avec jq.
    
    $ `curl -s http://127.0.0.1:8888/api/1.0/infos/env | jq '.[] | select( .name | contains("KUBE_")) | (.name, .value)'`
+   
+   Remarque : kubectl explain pod.spec.containers.env.valueFrom
 
 ## 2 - Service (SVC)
 
