@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+### Ajouter les noms du namespace ici
+  name: projet-001
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+### Ajouter les noms du namespace ici
+  name: projet-002
+ 
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+### Ajouter les noms du namespace ici
+  name: projet-003
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+### Ajouter les noms du namespace ici
+  name: projet-004
+  
+
+### Noublier pas le dernier projet
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+### Ajouter les noms du namespace ici
+  name: projet-005
+  
