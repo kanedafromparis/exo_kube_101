@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+### renseigner ici
+  name: 
+### 
+  labels:
+    kaneda-k.net/exo: exo0100
+spec:
+  accessModes:
+    - 
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: manual
+### ATTENTION A METTRE A JOUR le path
+  hostPath:
+    path: /data/xxxxx/
+###
