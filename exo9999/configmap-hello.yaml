@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  start: "true"
+kind: ConfigMap
+metadata:
+  name: config-my
+labels:
+  io.shyrka.erebus/product.owner: john.doe
+annotations:
+  alertemails: {0 : lerappoffi-4267@yopmail.com, 1 : opanuvo-6133@yopmail.com, 2 : sonixesommo-4201@yopmail.com, 3 : emmoddoddas-4771@yopmail.com}
+  date-acknowledgement: 2017-11-05
